@@ -1,16 +1,30 @@
 import React from "react";
 import { BG_LOGO } from "../utils/constants";
 import Header from "./Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { validateForm } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+
+import { auth } from "../utils/firebase";
+import { addUser } from "../utils/userSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+
   const userName = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleToggle = () => {
     setIsSignInForm(!isSignInForm);
     setErrorMessage(null);
@@ -28,8 +42,62 @@ const Login = () => {
       password.current.value,
       userName.current?.value
     );
+
     setErrorMessage(message);
+
+    if (message) return;
+
+    if (!isSignInForm) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          updateProfile(user, {
+            displayName: userName.current.value,
+          })
+            .then(() => {
+              const user = auth.currentUser;
+              dispatch(
+                addUser({
+                  name: user.displayName,
+                  email: user.email,
+                  uid: user.uid,
+                })
+              );
+              navigate("/browse");
+            })
+            .catch(() => {
+              navigate("/error");
+            });
+        })
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            setErrorMessage("Email already in use");
+          } else {
+            setErrorMessage(
+              "Some unexpected Error occured Please Try again Later!"
+            );
+          }
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          navigate("/browse");
+        })
+        .catch((error) => {
+          setErrorMessage("Invalid Credentials");
+        });
+    }
   };
+
   return (
     <div className="">
       <Header />

@@ -3,3 +3,6 @@ export const BG_LOGO =
 
 export const LOGO =
   "https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png";
+
+export const userIcon =
+  "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwallpapers.com%2Fnetflix-profile-pictures&psig=AOvVaw1r7PQ4XIlYAqyl-QOl9UUz&ust=1711456813167000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNC-i823j4UDFQAAAAAdAAAAABAE";
