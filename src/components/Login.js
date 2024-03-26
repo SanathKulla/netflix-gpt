@@ -1,5 +1,5 @@
 import React from "react";
-import { BG_LOGO } from "../utils/constants";
+import BG_LOGO from "../utils/BG_LOGO.jpg";
 import Header from "./Header";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
@@ -68,7 +68,6 @@ const Login = () => {
                   uid: user.uid,
                 })
               );
-              navigate("/browse");
             })
             .catch(() => {
               navigate("/error");
@@ -78,9 +77,7 @@ const Login = () => {
           if (error.code === "auth/email-already-in-use") {
             setErrorMessage("Email already in use");
           } else {
-            setErrorMessage(
-              "Some unexpected Error occured Please Try again Later!"
-            );
+            setErrorMessage(error.code + " " + error.message);
           }
         });
     } else {
@@ -89,9 +86,7 @@ const Login = () => {
         email.current.value,
         password.current.value
       )
-        .then((userCredential) => {
-          navigate("/browse");
-        })
+        .then((userCredential) => {})
         .catch((error) => {
           setErrorMessage("Invalid Credentials");
         });

@@ -1,0 +1,29 @@
+import React from "react";
+import useMainMovieTrailer from "../hooks/useMainMovieTrailer";
+import { useSelector } from "react-redux";
+
+const MainMovieTrailer = ({ movieId }) => {
+  const mainMovieTrailerKey = useSelector(
+    (store) => store.movies.mainMovieTrailer
+  );
+  console.log(mainMovieTrailerKey);
+
+  useMainMovieTrailer(movieId);
+
+  return (
+    <div className="w-screen">
+      <iframe
+        className="w-screen aspect-video"
+        src={
+          "https://www.youtube.com/embed/" +
+          mainMovieTrailerKey +
+          "?&autoplay=1&mute=1"
+        }
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      ></iframe>
+    </div>
+  );
+};
+
+export default MainMovieTrailer;
